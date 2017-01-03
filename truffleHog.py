@@ -94,12 +94,26 @@ def find_strings(git_url):
                                 b64Entropy = shannon_entropy(string, BASE64_CHARS)
                                 if b64Entropy > 4.5:
                                     foundSomething = True
-                                    printableDiff = printableDiff.replace(string, bcolors.WARNING + string + bcolors.ENDC)
+                                    for line in printableDiff.splitlines():
+                                        if string in line:
+                                            if ("+" + string) == line:
+                                                foundSomething = False
+                                            elif ("-" + string) == line:
+                                                foundSomething = False
+                                            else:
+                                                printableDiff = line.replace(string, bcolors.WARNING + string + bcolors.ENDC)
                             for string in hex_strings:
                                 hexEntropy = shannon_entropy(string, HEX_CHARS)
                                 if hexEntropy > 3:
                                     foundSomething = True
-                                    printableDiff = printableDiff.replace(string, bcolors.WARNING + string + bcolors.ENDC)
+                                    for line in printableDiff.splitlines():
+                                        if string in line:
+                                            if ("+" + string) == line:
+                                                foundSomething = False
+                                            elif ("-" + string) == line:
+                                                foundSomething = False
+                                            else:
+                                                printableDiff = line.replace(string, bcolors.WARNING + string + bcolors.ENDC)
                     if foundSomething:
                         commit_time =  datetime.datetime.fromtimestamp(prev_commit.committed_date).strftime('%Y-%m-%d %H:%M:%S')
                         print(bcolors.OKGREEN + "Date: " + commit_time + bcolors.ENDC)
